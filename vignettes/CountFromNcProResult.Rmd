@@ -1,0 +1,46 @@
+---
+title: "Tasks 20151218"
+author: "Peter von Rohr"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Tasks Extracted from Email
+
+
+1. Adapter entfernen analog zu den anderen Apps (ohne Prinseq)
+2. CountFiles generieren. CountFiles (1 File pro Sample) mit jeweils 2 Spalten, tab-separiert:
+    1. Identifier
+    2. matchCounts 
+
+        a.) allRNAs:doc/all_samples_all_subfamcov.data
+
+        b.) mature miRNAs: doc/mature_miRNA_miRNA_e_+2_+2_all_samples_subfamcov.data
+
+        c.) precursor miRNAs:doc/precursor_miRNA_miRNA_all_samples_subfamcov.data
+
+CountFiles ablegen in neuen Unterordnern von 'ncPRO_Result': allRNA, mature_miRNA,  precursor_miRNA
+
+3. Dataset Files generieren (fuer Import in Sushi). Urspruengliches 'dataset.tsv' nehmen und anstelle von 'Reads1 [File]'   die CountFiles in Spalten 'Count [File]' packen. Am Ende Spalten featureLevel (Wert='smRNA'), refFeatureFile (ohne Inhalt) und refBuild (ohne Inhalt) einfuegen.
+
+
+# Implementation
+
+* Order: start with 2, followed by 3. 1 is done last
+
+## Task 2: CountFiles generieren
+In order to find out how to produce the count files, we are running the new version of ncpro on the test data set and see from there how the counts can be generated. When running ncpro, the results are saved in directory: "ncPRO_Result/ncpro". The locations specified in the task are all in subdirectory "doc" of the ncPRO result folder. 
+
+Let us have a look at the structure of the result files:
+
+* doc/all_samples_all_subfamcov.data: has $n+1$ columns where $n$ corresponds to the number of samples. The extra-column contains the identifier which is entitled "idx"
+* doc/mature_miRNA_miRNA_e_+2_+2_all_samples_subfamcov.data
+* doc/precursor_miRNA_miRNA_all_samples_subfamcov.data
+
+Since all the files have a similar structure, the ncpro result files are split using a common function. The function uses two different parameters, the first specifies the input file and the second gives the output directory. 
+
+
